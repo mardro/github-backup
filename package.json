@@ -1,0 +1,35 @@
+{
+  "name": "github-repo-backup",
+  "version": "1.0.0",
+  "description": "A NodeJs CLI tool to backup GitHub repositories",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mardro/github-repo-backup.git"
+  },
+  "keywords": [
+    "github",
+    "backup",
+    "cli"
+  ],
+  "author": "Mark Drobnick",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mardro/github-repo-backup/issues"
+  },
+  "homepage": "https://github.com/mardro/github-repo-backup#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "clear": "^0.1.0",
+    "commander": "^9.2.0",
+    "figlet": "^1.5.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "nodemon": "^2.0.16"
+  }
+}

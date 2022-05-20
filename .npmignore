@@ -1,0 +1,5 @@
+node_modules
+build
+.vscode/launch.json
+examples
+webapp-updater-*.tgz

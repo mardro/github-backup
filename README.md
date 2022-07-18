@@ -8,7 +8,7 @@ A NodeJs CLI tool to Backup Github Repositories
 
    Clone the Repository from GitHub
 
-   `git clone https://<username>:<githubtoken>@github.com/<username>/<repositoryname>.git`
+   `git clone --mirror https://<username>:<githubtoken>@github.com/<username_organisation>/<repositoryname>.git`
 
 2. Bundle the Repository
 

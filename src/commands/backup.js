@@ -150,7 +150,7 @@ module.exports = {
       /* bundle the repository */
       console.log("\n ### Step 2: bundle the repository ###");
       let bundleName = getDateAndTime() + "_" + rep + ".bundle";
-      if (save && save.length > 0) {
+      if (repoName !== "all" && save && save.length > 0) {
         bundleName = save;
       }
       let bundleCMD =

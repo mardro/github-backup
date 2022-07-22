@@ -2,13 +2,13 @@
 
 A NodeJs CLI tool to Backup Github Repositories
 
-## Backup Steps
+## Backup Steps (what this program does)
 
 1. Git Clone
 
    Clone the Repository from GitHub
 
-   `git clone --mirror https://<username>:<githubtoken>@github.com/<username_organisation>/<repositoryname>.git`
+   `git clone --mirror https://<username>:<githubtoken>@github.com/<username_organisation>/<repositoryname>.git <destination>`
 
 2. Bundle the Repository
 
@@ -17,21 +17,31 @@ A NodeJs CLI tool to Backup Github Repositories
    `git bundle create path/to/file.bundle --all`
 
 3. Verify Bundle
+
    `git bundle verify file.bundle`
 
 ---
 
-## Get the Bundle Content Steps
+## Restore Steps (do manually)
 
-1.  Init a new Repo
+### Get the Bundle Content Steps
 
-    `git init backup-repo`
+1.  Clone the Repo from the bundle
 
-2.  Git Remote Add
-    cd into the new created repo diretory
+    `git clone path/to/file.bundle`
 
-    `git remote add origin path/to/file.bundle`
+2.  Get all the branches locally to be pushed up to your origin later
 
-3.  Git Pull
+    ```bash
+    remote=origin ; for brname in `git branch -r | grep $remote | grep -v master | grep -v HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}'`; do git branch --track $brname $remote/$brname || true; done 2>/dev/null
+    ```
 
-    `git pull origin master`
+### Push to GitHub
+
+1.  Create a new repo on your git server and update the origin of the local repo
+
+    `git remote set-url origin git@github.com/xtream1101/test-backup.git`
+
+2.  Push all branches and tags to the new remote origin
+    `git push --all`
+    `git push --tags`

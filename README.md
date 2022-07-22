@@ -2,7 +2,7 @@
 
 A NodeJs CLI tool to Backup Github Repositories
 
-## Backup Steps
+## Backup Steps (what this program does)
 
 1. Git Clone
 
@@ -22,7 +22,9 @@ A NodeJs CLI tool to Backup Github Repositories
 
 ---
 
-## Get the Bundle Content Steps
+## Restore Steps (do manually)
+
+### Get the Bundle Content Steps
 
 1.  Clone the Repo from the bundle
 
@@ -34,9 +36,7 @@ A NodeJs CLI tool to Backup Github Repositories
     remote=origin ; for brname in `git branch -r | grep $remote | grep -v master | grep -v HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}'`; do git branch --track $brname $remote/$brname || true; done 2>/dev/null
     ```
 
----
-
-## Push to GitHub
+### Push to GitHub
 
 1.  Create a new repo on your git server and update the origin of the local repo
 

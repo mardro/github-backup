@@ -1,5 +1,6 @@
 const { Octokit } = require("@octokit/core");
-const { exec } = require("node:child_process");
+
+const exec = require("child_process").exec;
 const fs = require("fs");
 
 const getDateAndTime = () => {
@@ -21,30 +22,7 @@ const getDateAndTime = () => {
   // current minutes
   let minutes = date_ob.getMinutes();
 
-  // current seconds
-  let seconds = date_ob.getSeconds();
-
-  // prints date in YYYY-MM-DD format
-  console.log(year + "-" + month + "-" + date);
-
-  // prints date & time in YYYY-MM-DD HH:MM:SS format
-  console.log(
-    year +
-      "-" +
-      month +
-      "-" +
-      date +
-      " " +
-      hours +
-      ":" +
-      minutes +
-      ":" +
-      seconds
-  );
-
   // prints time in HH:MM format
-  console.log(hours + ":" + minutes);
-
   return year + month + date + "_" + hours + minutes;
 };
 
@@ -60,8 +38,53 @@ const getAllRepoNames = async (PAT, user, typ) => {
   response.data.forEach((repo) => {
     allRepos.push(repo.name);
   });
+
+  console.log("found following projects to backup: " + allRepos.toString());
+
   return allRepos;
 };
+
+async function execCMD(cmd) {
+  console.log("START execCMD: " + cmd);
+  return new Promise((resolve) => {
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        throw new Error("ERROR: execCMD: " + err);
+      }
+      resolve(stdout ? console.log(stdout) : console.log(stderr));
+      console.log("END execCMD: " + cmd);
+    });
+  });
+}
+
+function checkVerifyMsg(stdout, stderr) {
+  if (
+    (stdout && stdout.includes("is okay")) ||
+    (stderr && stderr.includes("is okay"))
+  ) {
+    console.log("verify bundle check OK");
+  } else {
+    throw new Error(
+      "ERROR: verify bundle failed:\n stdout was = " +
+        stdout +
+        "\nstderr was = " +
+        stderr
+    );
+  }
+}
+
+async function execVerifyCMD(cmd) {
+  console.log("START execVerifyCMD: " + cmd);
+  return new Promise((resolve) => {
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        throw new Error("ERROR: execCMD: " + err);
+      }
+      resolve(checkVerifyMsg(stdout, stderr));
+      console.log("END execVerifyCMD: " + cmd);
+    });
+  });
+}
 
 module.exports = {
   doBackup: async (options) => {
@@ -92,11 +115,15 @@ module.exports = {
     }
 
     /* now backup all repos */
-    reposToBackup.forEach((rep) => {
+
+    for (let index = 0; index < reposToBackup.length; index++) {
+      console.log("\n\n ##### BACKUP " + reposToBackup[index] + " #####");
+
+      let rep = reposToBackup[index];
       let tempDir = destination + "/temp";
       try {
         if (fs.existsSync(tempDir)) {
-          fs.rmdirSync(tempDir, { recursive: true });
+          fs.rmSync(tempDir, { recursive: true });
         }
       } catch (e) {
         console.error("problem deleting temp dir");
@@ -104,6 +131,7 @@ module.exports = {
       }
 
       /* Git Clone */
+      console.log("\n ### Step 1: git clone ###");
       let gitCloneCMD =
         "git clone --mirror https://" +
         user +
@@ -117,56 +145,23 @@ module.exports = {
         " " +
         tempDir;
 
-      console.log("gitCloneCMD: " + gitCloneCMD);
-
-      let gitCloneCMDChild = exec(gitCloneCMD, (error, stdout, stderr) => {
-        if (error) {
-          console.error("error: " + error);
-          return;
-        }
-        console.log("stdout: " + stdout);
-        console.log("stderr: " + stderr);
-      });
-      gitCloneCMDChild.stdout.pipe(process.stdout);
-      gitCloneCMDChild.on("exit", function () {
-        process.exit();
-        console.log("finished...");
-      });
+      await execCMD(gitCloneCMD);
 
       /* bundle the repository */
+      console.log("\n ### Step 2: bundle the repository ###");
       let bundleName = getDateAndTime() + "_" + rep + ".bundle";
       if (save && save.length > 0) {
         bundleName = save;
       }
       let bundleCMD =
         "git bundle create " + destination + "/" + bundleName + " --all";
-      console.log("bundleCMD: " + bundleCMD);
 
-      exec("cd " + tempDir + " && " + bundleCMD, (error, stdout, stderr) => {
-        if (error) {
-          console.error("error: " + error);
-          return;
-        }
-        console.log("stdout: " + stdout);
-        console.log("stderr: " + stderr);
-      });
+      await execCMD("cd " + tempDir + " && " + bundleCMD);
 
       /* verify bundle */
+      console.log("\n ### Step 3: verify bundle ###");
       let verifyCMD = "git bundle verify " + destination + "/" + bundleName;
-      console.log("verifyCMD: " + verifyCMD);
-      exec("cd " + tempDir + " && " + verifyCMD, (error, stdout, stderr) => {
-        if (error) {
-          console.error("error: " + error);
-          return;
-        }
-        console.log("stdout: " + stdout);
-        console.log("stderr: " + stderr);
-
-        if (!stderr.includes("is okay")) {
-          console.error("the bundle verify check failed");
-          return;
-        }
-      });
-    });
+      await execVerifyCMD("cd " + tempDir + " && " + verifyCMD);
+    }
   },
 };

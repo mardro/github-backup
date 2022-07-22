@@ -22,7 +22,7 @@ A NodeJs CLI tool to Backup Github Repositories
 
 - To Backup a specific repository from an user (a GET reequest to GitHub will be made) with an individual backup name
 
-  ## `github-repo-backup backup -d PATH_TO_BACKUP_DIR -s MY_BACKUP_NAME -r MY_REPO -u USER_NAME -p GITHUB_PAT`
+  `github-repo-backup backup -d PATH_TO_BACKUP_DIR -s MY_BACKUP_NAME -r MY_REPO -u USER_NAME -p GITHUB_PAT`
 
 ---
 

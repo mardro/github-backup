@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "node .index.js backup -d PATH_TO_BACKUP_DIR -r all -o ORGANISATION_NAME -p GITHUB_PAT"
   },
   "bin": {
     "github-repo-backup": "./index.js"

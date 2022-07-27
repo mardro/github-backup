@@ -2,6 +2,27 @@
 
 A NodeJs CLI tool to Backup Github Repositories
 
+GitHub info :  
+![github-repo-backup GitHub Release](https://img.shields.io/github/release/mardro/github-repo-backup.svg)
+![GitHub license github-repo-backup license](https://img.shields.io/github/license/mardro/github-repo-backup.svg)
+![open issues for github-repo-backup on GitHub](https://img.shields.io/github/issues/mardro/github-repo-backup.svg)
+
+## Help
+
+```shell
+$ github-repo-backup backup --help
+
+Options:
+  -V, --version                                                     output the version number
+  -d, --destination <path to backup destination>      REQUIRED      the backup destination directory
+  -p, --PAT <the Personal Access Token>               REQUIRED      the personal access token used in GitHub
+  -r, --repo <the repo name>                          REQUIRED      the repo name used in GitHub or 'all'
+  -u, --username <the username>                       REQUIRED      the username used in GitHub
+  -o, --organisation <the organisation>                             the name of the ORGANISATION used in git clone command. (e.g. git clone https://USERNAME:GITHUB_TOKEN@github.com/ORGANISATION/REPO.git). If not set the USERNAME will be used
+  -s, --save <the name of the backup>                               the name of the backup bundle file. If not set the repo name with timestamp will be used (e.g. yyyyMMdd_HHmm_REPO.bundle)
+  -h, --help                                                        display help for command
+```
+
 ## Usage
 
 - To Backup ALL repositories from an organisation (a GET reequest to GitHub will be made)

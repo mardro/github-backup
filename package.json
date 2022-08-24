@@ -1,6 +1,6 @@
 {
   "name": "github-repo-backup",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A NodeJs CLI tool to backup GitHub repositories",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,9 @@
   },
   "bin": {
     "github-repo-backup": "./index.js"
+  },
+  "engines": {
+    "node": ">=12.0.0"
   },
   "repository": {
     "type": "git",

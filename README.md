@@ -23,6 +23,14 @@ Options:
   -h, --help                                                        display help for command
 ```
 
+---
+
+## Requirements
+
+You need an Github Personal Access Token GITHUB_PAT to use this tool.
+
+---
+
 ## Usage
 
 - To Backup ALL repositories from an organisation (a GET reequest to GitHub will be made)

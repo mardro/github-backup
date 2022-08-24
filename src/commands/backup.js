@@ -2,6 +2,7 @@ const { Octokit } = require("@octokit/core");
 
 const exec = require("child_process").exec;
 const fs = require("fs");
+const { isWindows } = require("../utils/utils");
 
 const getDateAndTime = () => {
   let date_ob = new Date();
@@ -46,6 +47,13 @@ const getAllRepoNames = async (PAT, user, typ) => {
 
 async function execCMD(cmd) {
   console.log("START execCMD: " + cmd);
+
+  if (isWindows()) {
+    if (cmd.startsWith("cd")) {
+      cmd = cmd.replace("cd", "cd /d");
+    }
+  }
+
   return new Promise((resolve) => {
     exec(cmd, (err, stdout, stderr) => {
       if (err) {
@@ -75,6 +83,13 @@ function checkVerifyMsg(stdout, stderr) {
 
 async function execVerifyCMD(cmd) {
   console.log("START execVerifyCMD: " + cmd);
+
+  if (isWindows()) {
+    if (cmd.startsWith("cd")) {
+      cmd = cmd.replace("cd", "cd /d");
+    }
+  }
+
   return new Promise((resolve) => {
     exec(cmd, (err, stdout, stderr) => {
       if (err) {
@@ -90,6 +105,8 @@ module.exports = {
   doBackup: async (options) => {
     console.log("Start backup...");
     const { repo, username, organisation, destination, save, PAT } = options;
+
+    let tempDir = destination + "/temp";
 
     let user = "";
     let typ = "";
@@ -120,7 +137,7 @@ module.exports = {
       console.log("\n\n ##### BACKUP " + reposToBackup[index] + " #####");
 
       let rep = reposToBackup[index];
-      let tempDir = destination + "/temp";
+
       try {
         if (fs.existsSync(tempDir)) {
           fs.rmSync(tempDir, { recursive: true });
@@ -162,6 +179,12 @@ module.exports = {
       console.log("\n ### Step 3: verify bundle ###");
       let verifyCMD = "git bundle verify " + destination + "/" + bundleName;
       await execVerifyCMD("cd " + tempDir + " && " + verifyCMD);
+    }
+
+    /* delete temp directory */
+    console.log("\n ### Step 4: delete temp directory ###");
+    if (fs.existsSync(tempDir)) {
+      fs.rmSync(tempDir, { recursive: true });
     }
   },
 };

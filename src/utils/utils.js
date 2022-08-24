@@ -11,4 +11,8 @@ module.exports = {
     console.log(chalk.green(pjson.description));
     console.log(chalk.green("Originally created by Mark Drobnick\n"));
   },
+
+  isWindows: () => {
+    return process.platform === "win32";
+  },
 };

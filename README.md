@@ -20,6 +20,7 @@ Options:
   -u, --username <the username>                       REQUIRED      the username used in GitHub
   -o, --organisation <the organisation>                             the name of the ORGANISATION used in git clone command. (e.g. git clone https://USERNAME:GITHUB_TOKEN@github.com/ORGANISATION/REPO.git). If not set the USERNAME will be used
   -s, --save <the name of the backup>                               the name of the backup bundle file. If not set the repo name with timestamp will be used (e.g. yyyyMMdd_HHmm_REPO.bundle)
+  -c, --clear  <clear old backups>                                  clear old backups in backup destination (-d --destination) that are older than a number of days (if file ends with *grb.bundle).
   -h, --help                                                        display help for command
 ```
 
@@ -33,23 +34,27 @@ You need an Github Personal Access Token GITHUB_PAT to use this tool.
 
 ## Usage
 
-- To Backup ALL repositories from an organisation (a GET reequest to GitHub will be made)
+- To Backup ALL repositories from an organisation (a GET request to GitHub will be made)
 
   `github-repo-backup backup -d PATH_TO_BACKUP_DIR -r all -o ORGANISATION_NAME -p GITHUB_PAT`
 
-- To Backup a specific repository from an organisation (a GET reequest to GitHub will be made)
+- To Backup ALL repositories from an organisation (a GET request to GitHub will be made) and remove all backups older than 7 days
+
+  `github-repo-backup backup -d PATH_TO_BACKUP_DIR -r all -o ORGANISATION_NAME -p GITHUB_PAT -c 7`
+
+- To Backup a specific repository from an organisation (a GET request to GitHub will be made)
 
   `github-repo-backup backup -d PATH_TO_BACKUP_DIR -r MY_REPO -o ORGANISATION_NAME -p GITHUB_PAT`
 
-- To Backup ALL repositories from an user (a GET reequest to GitHub will be made)
+- To Backup ALL repositories from an user (a GET request to GitHub will be made)
 
   `github-repo-backup backup -d PATH_TO_BACKUP_DIR -r all -u USER_NAME -p GITHUB_PAT`
 
-- To Backup a specific repository from an user (a GET reequest to GitHub will be made)
+- To Backup a specific repository from an user (a GET request to GitHub will be made)
 
   `github-repo-backup backup -d PATH_TO_BACKUP_DIR -r MY_REPO -u USER_NAME -p GITHUB_PAT`
 
-- To Backup a specific repository from an user (a GET reequest to GitHub will be made) with an individual backup name
+- To Backup a specific repository from an user (a GET request to GitHub will be made) with an individual backup name
 
   `github-repo-backup backup -d PATH_TO_BACKUP_DIR -s MY_BACKUP_NAME -r MY_REPO -u USER_NAME -p GITHUB_PAT`
 

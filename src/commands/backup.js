@@ -103,8 +103,9 @@ async function execVerifyCMD(cmd) {
 
 module.exports = {
   doBackup: async (options) => {
-    console.log("Start backup...");
-    const { repo, username, organisation, destination, save, PAT } = options;
+    console.log("\n\n ##### START BACKUP #####");
+    const { repo, username, organisation, destination, save, PAT, clear } =
+      options;
 
     let tempDir = destination + "/temp";
 
@@ -166,7 +167,7 @@ module.exports = {
 
       /* bundle the repository */
       console.log("\n ### Step 2: bundle the repository ###");
-      let bundleName = getDateAndTime() + "_" + rep + ".bundle";
+      let bundleName = getDateAndTime() + "_" + rep + "_grb.bundle";
       if (repoName !== "all" && save && save.length > 0) {
         bundleName = save;
       }
@@ -181,10 +182,31 @@ module.exports = {
       await execVerifyCMD("cd " + tempDir + " && " + verifyCMD);
     }
 
+    console.log("\n\n ##### BACKUP FINISHED #####");
+
+    console.log("\n\n #####  START CLEARING  #####");
+
     /* delete temp directory */
-    console.log("\n ### Step 4: delete temp directory ###");
+    console.log("\n ### Step 1: delete temp directory ###");
     if (fs.existsSync(tempDir)) {
       fs.rmSync(tempDir, { recursive: true });
     }
+
+    /* clear old backups */
+    console.log("\n ### Step 2: clear old backups ###");
+    let files = fs.readdirSync(destination);
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i];
+      if (file.endsWith("grb.bundle")) {
+        let filePath = destination + "/" + file;
+        let stats = fs.statSync(filePath);
+        let fileAge = Math.floor((Date.now() - stats.mtimeMs) / 1000 / 60 / 60);
+        if (fileAge > clear) {
+          fs.unlinkSync(filePath);
+        }
+      }
+    }
+
+    console.log("\n\n #####  END CLEARING  #####");
   },
 };

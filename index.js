@@ -40,6 +40,10 @@ program
     "-s, --save <the name of the backup>",
     "the name of the backup bundle file. If not set the repo name with timestamp will be used (e.g. yyyyMMdd_HHmm_REPO.bundle)"
   )
+  .option(
+    "-c, --clear <clear old backups>",
+    "clear old backups in backup destination (-d --destination) that are older than a number of days (if file ends with *grb.bundle)."
+  )
 
   .action(backup.doBackup);
 

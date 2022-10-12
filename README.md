@@ -98,7 +98,7 @@ You need an Github Personal Access Token GITHUB_PAT to use this tool.
 
 1.  Create a new repo on your git server and update the origin of the local repo
 
-    `git remote set-url origin git@github.com/xtream1101/test-backup.git`
+    `git remote set-url origin git@github.com/MY_GIT/test-backup.git`
 
 2.  Push all branches and tags to the new remote origin
     `git push --all`

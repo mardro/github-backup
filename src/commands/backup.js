@@ -199,8 +199,14 @@ module.exports = {
       let file = files[i];
       if (file.endsWith("grb.bundle")) {
         let filePath = destination + "/" + file;
-        let stats = fs.statSync(filePath);
-        let fileAge = Math.floor((Date.now() - stats.mtimeMs) / 1000 / 60 / 60);
+
+        //file age in days
+        let fileAge = Math.floor(
+          (Date.now() - fs.statSync(filePath).mtime) / (1000 * 60 * 60 * 24)
+        );
+
+        // console.log("fileAge: " + fileAge);
+        // console.log("clear: " + clear);
         if (fileAge > clear) {
           fs.unlinkSync(filePath);
         }
